@@ -11,6 +11,7 @@ work.  If not, see <http://creativecommons.org/licenses/by-sa/3.0/>.
 
 
 Requirements
+
 PyQtGraph
 
 
