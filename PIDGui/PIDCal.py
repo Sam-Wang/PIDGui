@@ -175,8 +175,8 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                 print ('the port can not be read')
 
         #################data spacer
-            self.error=self.cadena[1:6]
-            self.current=self.cadena[8:13]
+            self.error=self.cadena[1:7]
+            self.current=self.cadena[8:14]
             print self.error
             print self.current
                 
