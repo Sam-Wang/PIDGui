@@ -6,7 +6,7 @@ import sys
 import time
 import PIDGui
 import serial
-import pyqtgraph as pg
+#import pyqtgraph as pg
 import numpy as np
 
 
@@ -34,7 +34,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.connect(self.btnClose, SIGNAL("clicked()"), self.actionClose)
             ############################################################################
             ####################################begin text Edit
-            self.textEditCom.setText('COM12')
+            self.textEditCom.setText('COM13')
             self.textEditP.setText('0')
             self.textEditI.setText('0')
             self.textEditD.setText('0')
@@ -76,6 +76,11 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.btnGraph.setEnabled(True)
             self.btnStepUp.setEnabled(True)
             self.btnStepDown.setEnabled(True)
+            try:
+                self.control.close()
+                print('Prot COM closed')
+            except:
+                print('Prot no COM closed')
             try:
                 self.control=serial.Serial(self.COMCONTROL,19200,timeout=0.5) #config a port com
                 self.control.flushInput()
@@ -141,19 +146,12 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             print('Prot COM closed')
         except:
             print('Prot no COM closed')
-        #try:
-            #self.plot.close()
-            #self.plt_mgr.close()
-            #print('plot closed')
-        #except:
-            #print('plot no closed')
             
         sys.exit()
         
         
 
     def Timer(self):
-        #print("time interrupt")
         ##read radioButton and comboBox            
         try:
             self.radioButtonVar=self.radioButtonR.isChecked()
@@ -166,9 +164,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         #############read port Com            
         if(self.graphVar==1):
             self.cadena = ''
-            #print ('begin')
-            try:
-                #print ('reading...')                
+            try:              
                 #funcion de lectura de comunicacion Serial para hacer la cadena
                 
                 self.limiteCadena=0
@@ -182,15 +178,13 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                     if self.contadorSerial>=15:
                         self.limiteCadena=1
                         self.contadorSerial=0
-                 #       print ('readed') 
 #                        print self.cadena
                         
-#           self.varSerial=self.control.read()
             except:
                 print ('the port can not be read')
 
         #################data spacer
-            self.error=int(self.cadena[1:7])
+            self.error=int(self.cadena[1:7])-500
             self.current=int(self.cadena[8:14])
             print self.error
             print self.current
