@@ -1,5 +1,6 @@
 from PySide.QtCore import*
 from PySide.QtGui import *
+from streamplot import PlotManager
 
 import sys
 import time
@@ -18,6 +19,9 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.graphVar=0
             self.contadorSerial=0
             self.limiteCadena=0
+            self.plt_mgr=PlotManager(title="My first plot")
+            
+
             ####################################actions buttons
             self.connect(self.btnCom, SIGNAL("clicked()"), self.actionCom)
             self.connect(self.btnLoad, SIGNAL("clicked()"), self.actionLoad)
@@ -51,13 +55,12 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             timer.timeout.connect(self.Timer)
             timer.setInterval(100) #tiem in mS
             timer.start()
-            
 
            # x = np.random.normal(size=1000)
            # y = np.random.normal(size=1000)
            # pg.plot(x, y, pen=None, symbol='o')  ## setting pen=None disables line drawing
 
-    
+                
 ####################################Funtions             
     def actionCom(self):
         print ("actionCom")
@@ -135,7 +138,10 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.control.close()
         except:
             print('Prot COM closed')
+        self.plt_mgr.close()
         sys.exit()
+        
+        
 
     def Timer(self):
         #print("time interrupt")
@@ -168,17 +174,22 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                         self.limiteCadena=1
                         self.contadorSerial=0
                  #       print ('readed') 
-                        print self.cadena
+#                        print self.cadena
                         
 #           self.varSerial=self.control.read()
             except:
                 print ('the port can not be read')
 
         #################data spacer
-            self.error=self.cadena[1:7]
-            self.current=self.cadena[8:14]
+            self.error=int(self.cadena[1:7])
+            self.current=int(self.cadena[8:14])
             print self.error
             print self.current
+            
+            #pg.plot(self.error)
+            
+            self.plt_mgr.add(name="name_of_variable", x=self.error, y=self.current)
+            self.plt_mgr.update()
                 
         
 ###########################################################################
