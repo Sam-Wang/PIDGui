@@ -138,7 +138,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         sys.exit()
 
     def Timer(self):
-        print("time interrupt")
+        #print("time interrupt")
         ##read radioButton and comboBox            
         try:
             self.radioButtonVar=self.radioButtonR.isChecked()
@@ -151,39 +151,26 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         #############read port Com            
         if(self.graphVar==1):
             self.cadena = ''
-            print ('begin')
+            #print ('begin')
             try:
-                print ('reading...')                
+                #print ('reading...')                
                 #funcion de lectura de comunicacion Serial para hacer la cadena
                 
                 self.limiteCadena=0
                 self.contadorSerial=0
-                self.control.flush()
-                #while self.control.inWaiting()>0:
-                #while self.control.read()!= '$':
-                #    print("esperando inicio de cadena")
-#                if self.control.read()== '$':
-                while self.limiteCadena==0:
-                    #while self.control.read()!= '$':
-                    print ('reading...')
-                    #self.cadena += self.control.readline()                            
+                self.control.flushInput()
+
+                while self.limiteCadena==0:                           
                     self.cadena += self.control.read()
                     self.contadorSerial=self.contadorSerial+1
                     
                     if self.contadorSerial>=12:
                         self.limiteCadena=1
                         self.contadorSerial=0
-                        print ('readed') 
+                 #       print ('readed') 
                         print self.cadena
-                            
-                    #if self.cadena.find(";"):
-                    #    self.limiteCadena=1
-                    #    self.contadorSerial=0
-                    #    print ('readed')    
-                    #    print self.cadena
-                            
                         
-        #           self.varSerial=self.control.read()
+#           self.varSerial=self.control.read()
             except:
                 print ('the port can not be read')
         
