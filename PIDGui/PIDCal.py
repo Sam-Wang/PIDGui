@@ -164,7 +164,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                     self.cadena += self.control.read()
                     self.contadorSerial=self.contadorSerial+1
                     
-                    if self.contadorSerial>=12:
+                    if self.contadorSerial>=15:
                         self.limiteCadena=1
                         self.contadorSerial=0
                  #       print ('readed') 
@@ -173,6 +173,13 @@ class GUI(QDialog, PIDGui.Ui_GUI):
 #           self.varSerial=self.control.read()
             except:
                 print ('the port can not be read')
+
+        #################data spacer
+            self.error=self.cadena[1:6]
+            self.current=self.cadena[8:13]
+            print self.error
+            print self.current
+                
         
 ###########################################################################
 app=QApplication(sys.argv)
