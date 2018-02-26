@@ -185,12 +185,10 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.current=int(self.cadena[8:14])
             print self.error
             print self.current
-            
-            #pg.plot(self.error)
+    
             
             self.plt_mgr.add(name="name_of_variable", x=self.error, y=self.current)
-            self.plt_mgr.update()
-                
+            self.plt_mgr.update()               
         
 ###########################################################################
 app=QApplication(sys.argv)
