@@ -34,7 +34,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.connect(self.btnClose, SIGNAL("clicked()"), self.actionClose)
             ############################################################################
             ####################################begin text Edit
-            self.textEditCom.setText('COM13')
+            self.textEditCom.setText('COM12')
             self.textEditP.setText('0')
             self.textEditI.setText('0')
             self.textEditD.setText('0')
@@ -188,12 +188,15 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.current=int(self.cadena[8:14])
             print self.error
             print self.current
-            self.vector=self.vector+1
-    
+            self.vector=self.vector-1
+            if(self.vector==10):
+                self.vector=0
+            
             
             self.plt_mgr.add(name="error", x=self.vector, y=self.error)
             self.plt_mgr.add(name="current", x=self.vector, y=self.current)
-            self.plt_mgr.update()               
+            self.plt_mgr.update()
+            
         
 ###########################################################################
 app=QApplication(sys.argv)
