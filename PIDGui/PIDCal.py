@@ -2,15 +2,14 @@ from PySide.QtCore import*
 from PySide.QtGui import *
 
 import sys
-import socket
 import time
-import torocco_v0
+import PIDGui
 import serial
 import pyqtgraph as pg
 import numpy as np
 
 
-class GUI(QDialog, torocco_v0.Ui_GUI):
+class GUI(QDialog, PIDGui.Ui_GUI):
     def __init__(self,parent=None):
             super(GUI, self).__init__(parent)
             self.setupUi(self)
