@@ -34,7 +34,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.connect(self.btnClose, SIGNAL("clicked()"), self.actionClose)
             ############################################################################
             ####################################begin text Edit
-            self.textEditCom.setText('COM13')
+            self.textEditCom.setText('COM12')
             self.textEditP.setText('0')
             self.textEditI.setText('0')
             self.textEditD.setText('0')
@@ -141,11 +141,12 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             print('Prot COM closed')
         except:
             print('Prot no COM closed')
-        try: 
-            self.plt_mgr.close()
-            print('plot closed')
-        except:
-            print('plot no closed')
+        #try:
+            #self.plot.close()
+            #self.plt_mgr.close()
+            #print('plot closed')
+        #except:
+            #print('plot no closed')
             
         sys.exit()
         
