@@ -19,6 +19,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.graphVar=0
             self.contadorSerial=0
             self.limiteCadena=0
+            self.vector=0
             self.plt_mgr=PlotManager(title="My first plot")
             
 
@@ -33,7 +34,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.connect(self.btnClose, SIGNAL("clicked()"), self.actionClose)
             ############################################################################
             ####################################begin text Edit
-            self.textEditCom.setText('COM12')
+            self.textEditCom.setText('COM13')
             self.textEditP.setText('0')
             self.textEditI.setText('0')
             self.textEditD.setText('0')
@@ -77,6 +78,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.btnStepDown.setEnabled(True)
             try:
                 self.control=serial.Serial(self.COMCONTROL,19200,timeout=0.5) #config a port com
+                self.control.flushInput()
                 print ("port com connect 1")
                 #self.control=open() #open Port Com
                 #print ("port com connect 2")
@@ -136,9 +138,15 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         print ("actionClose")
         try:
             self.control.close()
-        except:
             print('Prot COM closed')
-        self.plt_mgr.close()
+        except:
+            print('Prot no COM closed')
+        try: 
+            self.plt_mgr.close()
+            print('plot closed')
+        except:
+            print('plot no closed')
+            
         sys.exit()
         
         
@@ -185,9 +193,11 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.current=int(self.cadena[8:14])
             print self.error
             print self.current
+            self.vector=self.vector+1
     
             
-            self.plt_mgr.add(name="name_of_variable", x=self.error, y=self.current)
+            self.plt_mgr.add(name="error", x=self.vector, y=self.error)
+            self.plt_mgr.add(name="current", x=self.vector, y=self.current)
             self.plt_mgr.update()               
         
 ###########################################################################
