@@ -164,6 +164,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                 #    print("esperando inicio de cadena")
 #                if self.control.read()== '$':
                 while self.limiteCadena==0:
+                    #while self.control.read()!= '$':
                     print ('reading...')
                     #self.cadena += self.control.readline()                            
                     self.cadena += self.control.read()
@@ -175,11 +176,11 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                         print ('readed') 
                         print self.cadena
                             
-                    if self.cadena.find(";"):
-                        self.limiteCadena=1
-                        self.contadorSerial=0
-                        print ('readed')    
-                        print self.cadena
+                    #if self.cadena.find(";"):
+                    #    self.limiteCadena=1
+                    #    self.contadorSerial=0
+                    #    print ('readed')    
+                    #    print self.cadena
                             
                         
         #           self.varSerial=self.control.read()
