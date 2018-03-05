@@ -219,11 +219,35 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                 self.control.write("U0")  #imprimir por el puerto serial 
             except:
                 print("Faild Write port com")
-                
+#envio de pasos +
     def actionStepUp(self):
         print ("actionStepUp")
+        self.comboBoxVar= int( self.comboBoxStep.currentText())
+        if self.comboBoxVar>100:
+            self.control.write("+250;")
+            self.control.write("+250;")
+            self.control.write("+250;")
+            self.control.write("+250;")
+            print("+1000;")
+        else:
+            self.controlData=str('+'+self.comboBoxStep.currentText()+';')
+            self.control.write(self.controlData)
+            print self.controlData
+#envio de pasos -            
     def actionStepDown(self):
         print ("actionStepDown")
+        self.comboBoxVar= int( self.comboBoxStep.currentText())
+        if self.comboBoxVar>100:
+            self.control.write("-250;")
+            self.control.write("-250;")
+            self.control.write("-250;")
+            self.control.write("-250;")
+            print ("-1000;")
+        else:
+            self.controlData=str('-'+self.comboBoxStep.currentText()+';')
+            self.control.write(self.controlData)
+            print self.controlData
+    
     def actionRestar(self):
         print ("actionRestar")
         self.textEditP.setText('0')
