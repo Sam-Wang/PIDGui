@@ -1,12 +1,12 @@
 from PySide.QtCore import*
 from PySide.QtGui import *
-from streamplot import PlotManager
+
 
 import sys
 import time
 import PIDGui
 import serial
-#import pyqtgraph as pg
+import pyqtgraph as pg
 import numpy as np
 
 
@@ -20,8 +20,21 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.contadorSerial=0
             self.limiteCadena=0
             self.vector=0
-            self.plt_mgr=PlotManager(title="My first plot")
+            #creacion de vectores para guardar datos iniciados en 0
+            self.rangoPlot=100 #rango a graficar
+            self.vectorErr=np.arange(self.rangoPlot)
+            self.vectorCurrent=np.arange(self.rangoPlot)
+            self.data=np.arange(self.rangoPlot)
+            self.vectorErr[:]=0
+            self.vectorCurrent[:]=0
             
+            #iniciacion de cuadro de Plot
+            win = pg.GraphicsWindow(title="PIDGui")
+            win.resize(800,600)
+            win.setWindowTitle('PIDGui')
+
+            p2 = win.addPlot(title="Error plot")
+            self.curve = p2.plot()
 
             ####################################actions buttons
             self.connect(self.btnCom, SIGNAL("clicked()"), self.actionCom)
@@ -57,11 +70,6 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             timer.setInterval(100) #tiem in mS
             timer.start()
 
-           # x = np.random.normal(size=1000)
-           # y = np.random.normal(size=1000)
-           # pg.plot(x, y, pen=None, symbol='o')  ## setting pen=None disables line drawing
-
-                
 ####################################Funtions             
     def actionCom(self):
         print ("actionCom")
@@ -104,9 +112,17 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             
         #print(self.comVar)
     def actionLoad(self):
-        print ("actionLoad")    
+        print ("actionLoad")
+        try:   
+            self.control.write("@")
+            while self.limiteCadena==0:                           
+                self.controlData += self.control.read()
+        except:
+            print("Faild Readin configuration")
+            
     def actionSave(self):
         print ("actionSave")
+        
     def actionGraph(self):
         print ("actionGraph")
         if(self.graphVar==0): #clic para graficar
@@ -188,15 +204,23 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.current=int(self.cadena[8:14])
             print self.error
             print self.current
-            self.vector=self.vector-1
-            if(self.vector==10):
-                self.vector=0
+            self.vector=self.vector+1
+            if(self.vector>(self.rangoPlot-1)):#rango de graficar
+                self.vector=(self.rangoPlot-1)
+                for i in range(0, (self.rangoPlot-1)):
+                    self.vectorErr[i]=self.vectorErr[i+1]
+                    
+
+                
+            #datos leidos guardadso en el vector
+            self.vectorErr[self.vector]=self.error
+            self.vectorCurrent[self.vector]=self.current
+            #graficar
+            self.data =self.vectorErr
+            self.curve.setData(self.data)
             
-            
-            self.plt_mgr.add(name="error", x=self.vector, y=self.error)
-            self.plt_mgr.add(name="current", x=self.vector, y=self.current)
-            self.plt_mgr.update()
-            
+    
+
         
 ###########################################################################
 app=QApplication(sys.argv)
