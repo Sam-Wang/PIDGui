@@ -74,7 +74,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             ############time interrupts
             timer=QTimer(self)
             timer.timeout.connect(self.Timer)
-            timer.setInterval(100) #tiem in mS
+            timer.setInterval(1) #time in mS
             timer.start()
 
 ####################################Funtions             
@@ -201,11 +201,6 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         self.controlData=str('F'+self.textEditF.text()+';')
         self.control.write(self.controlData)
         
-        print('P'+self.textEditP.text()+';')
-        print("I"+self.textEditI.text()+";")
-        print("D"+self.textEditD.text()+";")
-        print("C"+self.textEditC.text()+";")
-        print("F"+self.textEditF.text()+";")
         
     def actionGraph(self):
         print ("actionGraph")
@@ -286,8 +281,8 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         #################data spacer
             self.error=int(self.cadena[1:7])-500
             self.current=int(self.cadena[8:14])
-            print self.error
-            print self.current
+            #print self.error
+            #print self.current
             self.vector=self.vector+1
             if(self.vector>(self.rangoPlot-1)):#rango de graficar
                 self.vector=(self.rangoPlot-1)
