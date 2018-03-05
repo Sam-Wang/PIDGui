@@ -10,6 +10,13 @@ import pyqtgraph as pg
 import numpy as np
 
 
+class errorCom(Exception):
+    def __init__(self, valor):
+        self.valor = valor
+
+    def __str__(self):
+        return "Error " + str(self.valor)
+
 class GUI(QDialog, PIDGui.Ui_GUI):
     def __init__(self,parent=None):
             super(GUI, self).__init__(parent)
@@ -75,29 +82,64 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         print ("actionCom")
         self.COMCONTROL=self.textEditCom.text() #read a num port Com
         print(self.COMCONTROL)
-        if(self.comVar==0):
-            self.comVar=1
-            self.btnCom.setText("Disconnet")
-            #####btn in disable
-            self.btnLoad.setEnabled(True)
-            self.btnSave.setEnabled(True)
-            self.btnGraph.setEnabled(True)
-            self.btnStepUp.setEnabled(True)
-            self.btnStepDown.setEnabled(True)
+
+        self.contadorSerial=0
+        self.limiteCadena=0
+        self.controlData = ''
+        
+        
+        try:
             try:
                 self.control.close()
                 print('Prot COM closed')
             except:
                 print('Prot no COM closed')
-            try:
+            if(self.comVar==0):
+                
                 self.control=serial.Serial(self.COMCONTROL,19200,timeout=0.5) #config a port com
                 self.control.flushInput()
+                time.sleep(5)
+                print ("conectando")
+                #enviar datos basura para confirmar apertura de puerto
+                self.control.write("$")
+                self.control.write("$")
+                self.control.write("$")
+                self.control.write("$")
+                self.control.write("$")
+                self.control.write("$")
+                #while self.limiteCadena==0:
+                #    self.controlData += self.control.read()
+                #    self.contadorSerial=self.contadorSerial+1
+                #    if(self.controlData.count("$")>0):
+                #        self.limiteCadena=1
+                #        self.comVar=0
+                #    if(self.contadorSerial>10):
+                #        #raise errorCom(self.textEditCom.text())
+                #        self.limiteCadena=1
+                #        self.comVar=0
+                #    print("reenviando mensaje")
+                #    self.control.write("$")
+                        
+                    
+                #print (self.controlData)
                 print ("port com connect 1")
-                #self.control=open() #open Port Com
-                #print ("port com connect 2")
-            except:
-                print ("no port com connect")
+        except errorCom, e:
+            self.comVar=1
+            print e
+        except:
+            self.comVar=1
+            print ("no port com connect")
+        
             
+        if(self.comVar==0):
+            self.comVar=1
+            self.btnCom.setText("Disconnet")
+           #####btn in disable
+            self.btnLoad.setEnabled(True)
+            self.btnSave.setEnabled(True)
+            self.btnGraph.setEnabled(True)
+            self.btnStepUp.setEnabled(True)
+            self.btnStepDown.setEnabled(True)
         else:
             self.comVar=0
             self.btnCom.setText("Connet")
@@ -107,21 +149,63 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.btnGraph.setEnabled(False)
             self.btnStepUp.setEnabled(False)
             self.btnStepDown.setEnabled(False)
+            try:
+                self.control.close()
+                print('Prot COM closed')
+            except:
+                print('Prot no COM closed')
             
-            self.control.close() #close port Com
+        
+            
+            #self.control.close() #close port Com
             
         #print(self.comVar)
-    def actionLoad(self):
+    def actionLoad(self): #reading configuration 
         print ("actionLoad")
-        try:   
+        self.controlData = ''
+        try:
+            self.limiteCadena=0
+            self.contadorSerial=0
+            self.control.flushInput()
             self.control.write("@")
-            while self.limiteCadena==0:                           
+            print ("cadena enviada")
+            while self.limiteCadena==0:
+                
                 self.controlData += self.control.read()
+                self.contadorSerial=self.contadorSerial+1
+                
+                if self.contadorSerial>=27:
+                       self.limiteCadena=1
+                       self.contadorSerial=0
+
+
+            print self.controlData
+            self.textEditP.setText (self.controlData[2:5])
+            self.textEditI.setText (self.controlData[7:10])
+            self.textEditD.setText (self.controlData[12:15])
+            self.textEditC.setText (self.controlData[17:20])
+            self.textEditF.setText (self.controlData[22:26])
         except:
             print("Faild Readin configuration")
             
-    def actionSave(self):
+    def actionSave(self):#send configuration
         print ("actionSave")
+        self.controlData=str('P'+self.textEditP.text()+';')
+        self.control.write(self.controlData)
+        self.controlData=str('I'+self.textEditI.text()+';')
+        self.control.write(self.controlData)
+        self.controlData=str('D'+self.textEditD.text()+';')
+        self.control.write(self.controlData)
+        self.controlData=str('C'+self.textEditC.text()+';')
+        self.control.write(self.controlData)
+        self.controlData=str('F'+self.textEditF.text()+';')
+        self.control.write(self.controlData)
+        
+        print('P'+self.textEditP.text()+';')
+        print("I"+self.textEditI.text()+";")
+        print("D"+self.textEditD.text()+";")
+        print("C"+self.textEditC.text()+";")
+        print("F"+self.textEditF.text()+";")
         
     def actionGraph(self):
         print ("actionGraph")
