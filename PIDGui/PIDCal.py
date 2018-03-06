@@ -21,17 +21,40 @@ class GUI(QDialog, PIDGui.Ui_GUI):
     def __init__(self,parent=None):
             super(GUI, self).__init__(parent)
             self.setupUi(self)
-            #################Variables
+
+
+############leer datos guardados en archivo de texto
+            try:
+                archi=open('datos.txt','r')
+                linea=archi.readline()
+
+                keywords  = linea.split(";") 
+                #print keywords
+                  
+                while linea!="":
+                    #print linea 
+                    linea=archi.readline()
+                archi.close()
+                #asignar cada valor de la separacion split a su variable
+                self.varFlag, self.rangoPlot, self.COMCONTROL= keywords 
+                ##########terminar de leer datos
+            except:
+                self.rangoPlot=100 #rango a graficar
+                self.COMCONTROL='COM6'
+
+
+                        
+            #################Variables            
             self.comVar=0
             self.graphVar=0
             self.contadorSerial=0
             self.limiteCadena=0
             self.vector=0
             #creacion de vectores para guardar datos iniciados en 0
-            self.rangoPlot=100 #rango a graficar
-            self.vectorErr=np.arange(self.rangoPlot)
-            self.vectorCurrent=np.arange(self.rangoPlot)
-            self.data=np.arange(self.rangoPlot)
+            #self.rangoPlot=100 #rango a graficar
+            self.vectorErr=np.arange(int(self.rangoPlot))
+            self.vectorCurrent=np.arange(int(self.rangoPlot))
+            self.data=np.arange(int(self.rangoPlot))
             self.vectorErr[:]=0
             self.vectorCurrent[:]=0
             
@@ -54,7 +77,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.connect(self.btnClose, SIGNAL("clicked()"), self.actionClose)
             ############################################################################
             ####################################begin text Edit
-            self.textEditCom.setText('COM12')
+            self.textEditCom.setText(self.COMCONTROL)
             self.textEditP.setText('0')
             self.textEditI.setText('0')
             self.textEditD.setText('0')
@@ -200,6 +223,29 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         self.control.write(self.controlData)
         self.controlData=str('F'+self.textEditF.text()+';')
         self.control.write(self.controlData)
+
+        ##capturar datos de textEditors
+        self.COMCONTROL=self.textEditCom.text()
+        #self.rangoPlot=self.textEditI.text()
+        
+
+        #Borrar linea que contiene $
+        f = open('datos.txt')
+        output = []
+        for line in f:
+            if not "$" in line:
+                output.append(line)
+        f.close()
+        f = open('datos.txt', 'w')
+        f.writelines(output)
+        f.close()
+
+        #guardar nuevos datos leidos            
+        archi=open('datos.txt','a')
+        #escribir en este orden en el archivo TXT
+        archi.write("$;"+self.rangoPlot+";"+self.COMCONTROL)
+        archi.close()
+        print ("Datos guardados")
         
         
     def actionGraph(self):
@@ -308,9 +354,9 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             #print self.error
             #print self.current
             self.vector=self.vector+1
-            if(self.vector>(self.rangoPlot-1)):#rango de graficar
-                self.vector=(self.rangoPlot-1)
-                for i in range(0, (self.rangoPlot-1)):
+            if(self.vector>(int(self.rangoPlot)-1)):#rango de graficar
+                self.vector=(int(self.rangoPlot)-1)
+                for i in range(0, (int(self.rangoPlot)-1)):
                     self.vectorErr[i]=self.vectorErr[i+1]
                     
 
