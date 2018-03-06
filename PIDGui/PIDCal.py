@@ -78,14 +78,13 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             ############################################################################
             ####################################begin text Edit
             self.textEditCom.setText(self.COMCONTROL)
+            self.textEditPlot.setText(self.rangoPlot)
             self.textEditP.setText('0')
             self.textEditI.setText('0')
             self.textEditD.setText('0')
             self.textEditC.setText('0')
             self.textEditF.setText('0')
-            self.textEditPM.setText('0')
-            self.textEditPC.setText('0')
-            self.textEditErr.setText('0')
+            
 
             #####btn in disable
             self.btnLoad.setEnabled(False)
@@ -226,7 +225,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
 
         ##capturar datos de textEditors
         self.COMCONTROL=self.textEditCom.text()
-        #self.rangoPlot=self.textEditI.text()
+        self.rangoPlot=self.textEditPlot.text()
         
 
         #Borrar linea que contiene $
@@ -301,9 +300,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         self.textEditD.setText('0')
         self.textEditC.setText('0')
         self.textEditF.setText('0')
-        self.textEditPM.setText('0')
-        self.textEditPC.setText('0')
-        self.textEditErr.setText('0')
+        
     def actionClose(self):
         print ("actionClose")
         try:
