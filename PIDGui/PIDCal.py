@@ -120,15 +120,15 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                 
                 self.control=serial.Serial(self.COMCONTROL,19200,timeout=0.5) #config a port com
                 self.control.flushInput()
-                time.sleep(5)
+                #time.sleep(5)
                 print ("conectando")
                 #enviar datos basura para confirmar apertura de puerto
-                self.control.write("$")
-                self.control.write("$")
-                self.control.write("$")
-                self.control.write("$")
-                self.control.write("$")
-                self.control.write("$")
+                #self.control.write("$")
+                #self.control.write("$")
+                #self.control.write("$")
+                #self.control.write("$")
+                #self.control.write("$")
+                #self.control.write("$")
                 #while self.limiteCadena==0:
                 #    self.controlData += self.control.read()
                 #    self.contadorSerial=self.contadorSerial+1
