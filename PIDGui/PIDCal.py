@@ -308,8 +308,6 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             
         sys.exit()
         
-        
-
     def Timer(self):
                 
         
@@ -339,8 +337,6 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                 self.graphVar=0
                 self.btnGraph.setText("Graph")
                 self.actionCom()
-            
-                
             
             
 #############read port Com            
@@ -383,12 +379,6 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                 self.curve.setData(self.data)
             except:
                 print "no readed data"
-            
-
-        
-            
-    
-
         
 ###########################################################################
 app=QApplication(sys.argv)
