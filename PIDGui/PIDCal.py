@@ -121,7 +121,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
                     print('Prot COM closed')
                 except:
                     print('Prot no COM closed')
-                self.control=serial.Serial(self.COMCONTROL,19200,timeout=0.5) #config a port com
+                self.control=serial.Serial(self.COMCONTROL,19200,timeout=1) #config a port com
                 self.control.flushInput()
                 #time.sleep(5)
                 print ("conectando")                        
@@ -171,16 +171,25 @@ class GUI(QDialog, PIDGui.Ui_GUI):
         print ("actionLoad")
         self.controlData = ''
         try:
-            
             self.limiteCadena=0
             self.contadorSerial=0
             self.control.flushInput()
             self.control.write("@")
+            #self.control.write("@")
             print ("cadena enviada")
             while self.limiteCadena==0:
+                #print ("esperando")
                 
                 self.controlData += self.control.read()
+                #self.data = self.control.read()
+                #self.controlData += self.data
                 self.contadorSerial=self.contadorSerial+1
+                if self.controlData == "":
+                    self.control.flushInput()
+                    self.control.write("@")
+                    time.sleep(0.1)
+                    
+                
                 
                 if self.contadorSerial>=27:
                        self.limiteCadena=1
@@ -245,6 +254,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.btnStepUp.setEnabled(False)
             self.btnStepDown.setEnabled(False)
             try:
+                
                 self.control.write("U1")  #imprimir por el puerto serial 
             except:
                 print("Faild Write port com")
@@ -258,6 +268,7 @@ class GUI(QDialog, PIDGui.Ui_GUI):
             self.btnStepUp.setEnabled(True)
             self.btnStepDown.setEnabled(True)
             try:
+                
                 self.control.write("U0")  #imprimir por el puerto serial 
             except:
                 print("Faild Write port com")
